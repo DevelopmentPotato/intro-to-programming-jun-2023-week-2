@@ -10,6 +10,7 @@
         </ul>
     </section>
     <section class="col">
-        <router-outlet />
+        <app-create (itemAdded)="onItemAdded($event)"/>
+        <app-list [list]="list()"/>
     </section>
 </section>

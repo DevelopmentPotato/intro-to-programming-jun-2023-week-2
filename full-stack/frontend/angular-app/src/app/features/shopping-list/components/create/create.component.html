@@ -1,7 +1,28 @@
-<form>
+<form
+    [formGroup]="form"
+    (ngSubmit)="addItem()">
     <div class="form-group">
-        <label for="description">Description of Item To Add</label>
-        <input type="text" id="description" class="form-control">
-        <button type="submit" class="btn btn-primary">Add This Item</button>
+        <label 
+            for="description">
+            Description of Item To Add
+        </label>
+        <input 
+            type="text" 
+            id="description" 
+            formControlName="description" 
+            class="form-control">
+
+            <div 
+                class="alert alert-danger" 
+                *ngIf="description.errors && (description.touched || description.dirty)">
+                <p *ngIf="description.hasError('required')">This is required!</p>
+                <p *ngIf="description.hasError('minlength')">This is too short!</p>
+                <p *ngIf="description.hasError('maxlength')">This is too long!</p>
+            </div>
+        <button 
+            type="submit" 
+            class="btn btn-primary">
+            Add This Item
+        </button>
     </div>
 </form> 

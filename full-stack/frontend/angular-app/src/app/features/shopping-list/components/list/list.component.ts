@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ShoppingListItemModel } from '../../model';
 
@@ -10,8 +10,5 @@ import { ShoppingListItemModel } from '../../model';
   styleUrls: ['./list.component.css']
 })
 export class ListComponent {
-  list:ShoppingListItemModel[] = [
-    { id : '1', description: 'shampoo', purchased: false},
-    {id: '2', description: 'lettuce', purchased: true}
-  ]
+  @Input({required: true}) list: ShoppingListItemModel[] = [];
 }
