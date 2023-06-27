@@ -12,6 +12,10 @@ export const routes: Routes = [
         component: BankAccountComponent
     },
     {
+        path: 'shopping',
+        loadChildren: () => import('./features/shopping-list/shoppinglist.routes').then(m => m.SHOPPING_LIST_ROUTES)
+    },
+    {
         path: '**',
         component: LandingPageComponent
     }
