@@ -1,4 +1,8 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using ShoppingApi.Controllers;
+using ShoppingApi.Controllers.ShoppingList;
+using ShoppingApi.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,8 +13,25 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var shoppingConnectionString = builder.Configuration.GetConnectionString("shopping") ?? throw new Exception("No connection string for shopping");
 
-builder.Services.AddTransient<ILookupTheStatus, StatusLookup>();
+builder.Services.AddDbContext<ShoppingDataContext>(options =>
+{
+    options.UseNpgsql(shoppingConnectionString);
+});
+
+builder.Services.AddScoped<ILookupTheStatus, StatusLookup>();
+builder.Services.AddScoped<IManageTheShoppingList, PostgresShoppingManager>();
+
+builder.Services.AddCors(builder =>
+{
+    builder.AddDefaultPolicy(pol =>
+    {
+        pol.AllowAnyOrigin();
+        pol.AllowAnyHeader();
+        pol.AllowAnyMethod();
+    });
+});
 
 var app = builder.Build();
 
@@ -20,6 +41,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors();
 
 app.UseAuthorization();
 

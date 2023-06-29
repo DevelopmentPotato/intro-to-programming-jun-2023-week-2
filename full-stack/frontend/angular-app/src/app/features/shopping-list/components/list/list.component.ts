@@ -1,6 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ShoppingListItemModel } from '../../model';
+import { Store } from '@ngrx/store';
+import { selectShoppingListModel } from '../../state';
+import { ListEvents } from '../../state/list.actions';
 
 @Component({
   selector: 'app-list',
@@ -10,5 +13,13 @@ import { ShoppingListItemModel } from '../../model';
   styleUrls: ['./list.component.css']
 })
 export class ListComponent {
-  @Input({required: true}) list: ShoppingListItemModel[] = [];
+  list = inject(Store).selectSignal(selectShoppingListModel);
+
+  constructor(private store:Store){
+
+  }
+
+  markPurchased(item:ShoppingListItemModel){
+    this.store.dispatch(ListEvents.itemMarkedPurchased({payload: item}));
+  }
 }

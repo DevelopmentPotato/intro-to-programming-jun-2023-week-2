@@ -1,6 +1,3 @@
+import { ShoppingListEntity } from '../state/list.reducers';
 
-export type ShoppingListItemModel = {
-    id: string;
-    description: string;
-    purchased: boolean;
-}
+export type ShoppingListItemModel = ShoppingListEntity;
