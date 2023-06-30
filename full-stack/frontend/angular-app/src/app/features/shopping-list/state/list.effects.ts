@@ -5,17 +5,18 @@ import { map, mergeMap, switchMap, tap } from 'rxjs';
 import { ShoppingFeatureEvents } from './features.actions';
 import { ShoppingListEntity } from './list.reducers';
 import { ListDocuments, ListEvents } from './list.actions';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class ListEffects {
-
+    readonly baseUrl =  environment.apiUrl;
     markPurchased$ = createEffect(() => {
         return this.actions$.pipe(
           ofType(ListEvents.itemMarkedPurchased),
           mergeMap((originalAction) =>
             this.http
               .put(
-                `http://localhost:1338/completed-shopping-items/${originalAction.payload.id}`,
+                this.baseUrl + `completed-shopping-items/${originalAction.payload.id}`,
                 originalAction.payload,
               )
               .pipe(
@@ -33,7 +34,7 @@ export class ListEffects {
           mergeMap(({ payload }) =>
             this.http
               .post<ShoppingListEntity>(
-                'http://localhost:1338/shopping-list',
+                this.baseUrl + 'shopping-list',
                 payload,
               )
               .pipe(map((payload) => ListDocuments.item({ payload }))),
@@ -51,7 +52,7 @@ export class ListEffects {
       switchMap(() =>
         this.http
           .get<{ data: ShoppingListEntity[] }>(
-            'http://localhost:1338/shopping-list',
+            this.baseUrl + 'shopping-list',
           )
           .pipe(
             map((response) => response.data),
